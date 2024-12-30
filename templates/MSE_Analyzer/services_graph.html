@@ -8,20 +8,20 @@
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 
     <script>
-        
+
         async function getGraphData() {
             const maxAttempts = 5;
             let attempts = 0;
             let isResolved = false;
             let data = [];
-            
+
             const code = document.getElementById("ticker_code").value;
             const interval_start_raw = document.getElementById("interval_start").value;
             const interval_end_raw = document.getElementById("interval_end").value;
-            
+
             const interval_start = interval_start_raw.replaceAll("/", ".");
             const interval_end = interval_end_raw.replaceAll("/", ".");
-            
+
             while ((attempts < maxAttempts) && !isResolved) {
                 try {
                     const resp = await fetch(`http://127.0.0.1:5000/tickers/analyze/averages/${interval_start}/${interval_end}/${code}`);
@@ -32,10 +32,10 @@
                     attempts++;
                 }
             }
-            
+
             return data
         }
-        
+
         async function createGraph() {
             const data = await getGraphData()
 
@@ -44,10 +44,10 @@
                 return;
             }
 
-            
-            
+
+
             data.sort((a, b) => new Date(a.date) - new Date(b.date));
-            
+
             console.log(data)
 
             const margin = {top: 20, right: 50, bottom: 50, left: 50};
@@ -90,7 +90,7 @@
 
             const keys = ["last_trade_price_SMA", "last_trade_price_EMA", "last_trade_price_CMA"];
             const colors = ["steelblue", "green", "orange"];
-            
+
 
             keys.forEach((key, i) => {
                 svg.append("path")
@@ -103,20 +103,20 @@
             });
 
         }
-        
+
         async function getTableData() {
             const maxAttempts = 5;
             let attempts = 0;
             let isResolved = false;
             let data = [];
-            
+
             const code = document.getElementById("ticker_code").value;
             const interval_start_raw = document.getElementById("interval_start").value;
             const interval_end_raw = document.getElementById("interval_end").value;
-            
+
             const interval_start = interval_start_raw.replaceAll("/", ".");
             const interval_end = interval_end_raw.replaceAll("/", ".");
-            
+
             while ((attempts < maxAttempts) && !isResolved) {
                 try {
                     const resp = await fetch(`http://127.0.0.1:5000/tickers/analyze/oscillators/${interval_start}/${interval_end}/${code}`);
@@ -127,23 +127,23 @@
                     attempts++;
                 }
             }
-            
+
             return data
         }
-        
-        
+
+
         async function populateTable() {
             const tableData = await getTableData()
-            
+
             tableData.sort((a, b) => new Date(a.date) - new Date(b.date));
-            
+
             console.log(tableData)
-            
+
             const tableBody = document.getElementById('data-table-body');
-            
+
             tableData.forEach(item => {
                 const row = document.createElement("tr");
-                
+
                 for (const key in item) {
                     if (key.startsWith('momentum') || key.startsWith('date_str')) {
                         console.log(key)
@@ -155,14 +155,14 @@
                 console.log('------------------')
                 tableBody.appendChild(row)
             })
-            
+
         }
-        
+
         document.addEventListener("DOMContentLoaded", () => {
             createGraph()
             populateTable()
         });
-        
+
     </script>
 
 </head>
@@ -191,33 +191,33 @@
             </div>
         </div>
     </nav>
-    
+
     <input type="hidden" name="interval_start" id="interval_start" value="{{ interval_start }}">
     <input type="hidden" name="interval_end" id="interval_end" value="{{ interval_end }}">
     <input type="hidden" name="ticker_code" id="ticker_code" value="{{ ticker_code }}">
-           
-           
+
+
     <div class="container mt-4">
         <div id="graph"></div>
     </div>
-    
+
     <div class="container mt-4">
             <div class="row">
                 <div class="col-md-8 mx-auto">
-            
+
                 <h2>Legend</h2>
-            
+
                 <ul class="list-group">
                     <li class="list-group-item"><p style="color: steelblue">Close - Simple Moving Average</p></li>
                     <li class="list-group-item"><p style="color: green">Close - Exponential Moving Average</p></li>
                     <li class="list-group-item"><p style="color: orange">Close - Cumulative Moving Average</p></li>
                 </ul>
-            
+
                 </div>
         </div>
     </div>
-    
-    <div class="container my-5">
+
+    <div class="container my-5 max-w-80 max-h-80 overflow-hidden">
     <h1 class="text-center mb-4">Momentum Oscillators</h1>
     <table class="table table-striped table-bordered">
       <thead>
@@ -244,12 +244,12 @@
         </tr>
       </thead>
       <tbody id="data-table-body">
-        
+
       </tbody>
     </table>
   </div>
-    
-    
+
+
 
     <footer class="blockquote-footer">
     <div class="container d-flex justify-content-between">

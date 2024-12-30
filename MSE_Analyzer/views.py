@@ -8,7 +8,6 @@ from django.views.decorators.csrf import csrf_exempt
 import requests as req_lib
 
 
-
 def home_page_content(request):
     return render(request, 'MSE_Analyzer/home_page_content.html')
 
