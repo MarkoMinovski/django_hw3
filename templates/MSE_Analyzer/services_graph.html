@@ -103,64 +103,10 @@
             });
 
         }
-
-        async function getTableData() {
-            const maxAttempts = 5;
-            let attempts = 0;
-            let isResolved = false;
-            let data = [];
-
-            const code = document.getElementById("ticker_code").value;
-            const interval_start_raw = document.getElementById("interval_start").value;
-            const interval_end_raw = document.getElementById("interval_end").value;
-
-            const interval_start = interval_start_raw.replaceAll("/", ".");
-            const interval_end = interval_end_raw.replaceAll("/", ".");
-
-            while ((attempts < maxAttempts) && !isResolved) {
-                try {
-                    const resp = await fetch(`http://127.0.0.1:5000/tickers/analyze/oscillators/${interval_start}/${interval_end}/${code}`);
-                    data = await resp.json();
-                    isResolved = true;
-                } catch (e) {
-                    console.log(`${e.message}`);
-                    attempts++;
-                }
-            }
-
-            return data
-        }
-
-
-        async function populateTable() {
-            const tableData = await getTableData()
-
-            tableData.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-            console.log(tableData)
-
-            const tableBody = document.getElementById('data-table-body');
-
-            tableData.forEach(item => {
-                const row = document.createElement("tr");
-
-                for (const key in item) {
-                    if (key.startsWith('momentum') || key.startsWith('date_str')) {
-                        console.log(key)
-                        const cell = document.createElement('td');
-                        cell.textContent = item[key];
-                        row.appendChild(cell);
-                    }
-                }
-                console.log('------------------')
-                tableBody.appendChild(row)
-            })
-
-        }
+        
 
         document.addEventListener("DOMContentLoaded", () => {
             createGraph()
-            populateTable()
         });
 
     </script>
@@ -244,7 +190,13 @@
         </tr>
       </thead>
       <tbody id="data-table-body">
-
+            {% for row in json_array_momentum_oscillators %}
+            <tr>
+                {% for key, value in row.items %}
+                    <td> {{ value }} </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
       </tbody>
     </table>
   </div>
