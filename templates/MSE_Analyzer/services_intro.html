@@ -6,46 +6,6 @@
     <title>{% block title %}MSE Analyzer{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <script>
-
-        async function populateOptions() {
-            const maxAttempts = 5
-            let attempts = 0
-            let isResolved = false;
-            let options = null;
-            while ((attempts < maxAttempts) && !isResolved) {
-                try {
-                    const resp = await fetch("http://127.0.0.1:5000/all")
-                    options = await resp.json()
-                    console.log(resp)
-                    isResolved = true;
-                } catch (e) {
-                    console.log(`${e.message}`)
-                    attempts++;
-                }
-            }
-
-            const selectTag = document.getElementById("tickerSelect");
-
-            if (isResolved) {
-                options.forEach(optn => {
-                    const optionTag = document.createElement("option")
-                    optionTag.value = optn.ticker
-                    optionTag.innerHTML = optn.ticker
-                    selectTag.appendChild(optionTag)
-                })
-            }
-
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            populateOptions()
-        })
-
-
-    </script>
-
-
 
 </head>
 <body>
@@ -84,6 +44,9 @@
                 <label for="tickerSelect" class="form-label">Select a Ticker</label>
                 <select class="form-select" id="tickerSelect" name="ticker" required>
                     <option value="" disabled selected>Choose a ticker</option>
+                    {% for element in options_list %}
+                        <option value=" {{ element.ticker }} "> {{ element.ticker }} </option>
+                    {% endfor %}
                 </select>
             </div>
 
