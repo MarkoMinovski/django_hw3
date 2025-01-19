@@ -22,7 +22,7 @@ def contact(request):
 
 def services(request):
 
-    api_resp_for_all_tickers = req_lib.get("http://127.0.0.1:5000/all")
+    api_resp_for_all_tickers = req_lib.get("http://flask_backend:5000/all")
 
     json_all_tickers = api_resp_for_all_tickers.json()
 
@@ -45,7 +45,7 @@ def analysed(request):
         selected_ticker = request.POST.get('ticker')
         selected_interval = request.POST.get('interval')
 
-        latest_available_date_resp = req_lib.get('http://127.0.0.1:5000/tickers/latest/str')
+        latest_available_date_resp = req_lib.get('http://flask_backend:5000/tickers/latest/str')
 
         lds_json = latest_available_date_resp.json()
 
@@ -69,7 +69,7 @@ def analysed(request):
         interval_start_with_periods = interval_start_str.replace('/', '.')
         interval_end_with_periods = interval_end_str.replace('/', '.')
 
-        url_endpoint = ("http://127.0.0.1:5000/tickers/analyze/oscillators/" + interval_start_with_periods + '/' +
+        url_endpoint = ("http://flask_backend:5000/tickers/analyze/oscillators/" + interval_start_with_periods + '/' +
                         interval_end_with_periods + '/' + selected_ticker)
 
         api_resp_for_oscillator_analysis = req_lib.get(url_endpoint)

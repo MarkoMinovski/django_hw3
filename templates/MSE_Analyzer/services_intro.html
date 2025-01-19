@@ -45,7 +45,7 @@
                 <select class="form-select" id="tickerSelect" name="ticker" required>
                     <option value="" disabled selected>Choose a ticker</option>
                     {% for element in options_list %}
-                        <option value=" {{ element.ticker }} "> {{ element.ticker }} </option>
+                        <option value="{{ element.ticker }}"> {{ element.ticker }} </option>
                     {% endfor %}
                 </select>
             </div>
