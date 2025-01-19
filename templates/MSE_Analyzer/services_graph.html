@@ -24,7 +24,7 @@
 
             while ((attempts < maxAttempts) && !isResolved) {
                 try {
-                    const resp = await fetch(`http://localhost:5000/tickers/analyze/averages/${interval_start}/${interval_end}/${code}`);
+                    const resp = await fetch(`https://msewebback-fuc6brbba4bmehcg.germanywestcentral-01.azurewebsites.net/tickers/analyze/averages/${interval_start}/${interval_end}/${code}`);
                     data = await resp.json();
                     isResolved = true;
                 } catch (e) {
